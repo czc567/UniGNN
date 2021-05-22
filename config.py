@@ -27,4 +27,20 @@ def parse():
     p.add_argument('--nostdout', action="store_true",  help='do not output logging to terminal')
     p.add_argument('--split', type=int, default=1,  help='choose which train/test split to use')
     p.add_argument('--out-dir', type=str, default='runs/test',  help='output dir')
+
+
+    p.add_argument('--save_file', default='results.csv', help='save file name')
+
+    #argument for batch_norm
+    p.add_argument("--type_norm", default="group",help="The type of the norm.")
+    p.add_argument('--num_groups', type=int, default=10, help='The number of groups.')
+    p.add_argument('--skip_weight', type=float, default=0.0001, help='skip_weight.')
+    p.add_argument('--skipweight_learnable', action='store_true', default=False, help='learnable  skip_weight')
+    p.add_argument('--wd_sw', type=float, default=1e-5, help='weight decay (L2 loss on parameters).')
+    p.add_argument('--lr_sw', type=float, default=1e-7,help='Initial learning rate.')
+    p.add_argument('--multiple', type=float, default=1, help='the multiple of pairnorm')
+    p.add_argument('--mul_learnable', action='store_true', default=False, help='learnable  multiple')
+    p.add_argument('--wd_mul', type=float, default=1e-5, help='weight decay (L2 loss on parameters).')
+    p.add_argument('--lr_mul', type=float, default=1e-7,help='Initial learning rate.')
+
     return p.parse_args()

@@ -111,7 +111,20 @@ def initialise(X, Y, G, args, unseen=None):
         optimiser = optim.Adam(model.parameters(), lr=0.01, weight_decay=5e-4)
     else:
         model = UniGNN(args, nfeat, nhid, nclass, nlayer, nhead, V, E)
-        optimiser = optim.Adam(model.parameters(), lr=0.01, weight_decay=5e-4)
+        p1, p2, p3, = [], [], []  # 用于设置不同的层使用不同的学习率
+        for n, p in model.named_parameters():
+            print(n, p.shape)
+            if '.lam' in n:
+                p2.append(p)
+            elif '.mul' in n:
+                p3.append(p)
+            else:
+                p1.append(p)
+        optimiser = optim.Adam([
+            {'params': p1, 'weight_decay': 5e-4, 'lr':0.01},
+            {'params': p2, 'weight_decay': args.wd_sw, 'lr': args.lr_sw},
+            {'params': p3, 'weight_decay': args.wd_mul, 'lr': args.lr_mul}])
+        #optimiser= optim.Adam(model.parameters(), lr=0.01, weight_decay=5e-4)
 
 
     model.cuda()

@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn, torch.nn.functional as F
+from torch.nn.parameter import Parameter
 
 
 import math 
@@ -322,12 +323,26 @@ class UniGNN(nn.Module):
         self.input_drop = nn.Dropout(args.input_drop)
         self.dropout = nn.Dropout(args.dropout)
 
+
+        self.type_norm = args.type_norm
+        self.num_groups =args.num_groups
+        self.skip_weight=args.skip_weight
+        if self.type_norm in ['None', 'batch', 'pair']:
+            skip_connect = False
+        else:
+            skip_connect = True
+        self.layers_bn = torch.nn.ModuleList([])
+        for _ in range(nlayer-1):
+            self.layers_bn.append(batch_norm(nhid * nhead, self.type_norm, skip_connect, self.num_groups, self.skip_weight,
+                                             args.skipweight_learnable))
+
     def forward(self, X):
         V, E = self.V, self.E 
         
         X = self.input_drop(X)
-        for conv in self.convs:
+        for i, conv in enumerate(self.convs):
             X = conv(X, V, E)
+            X=self.layers_bn[i](X)
             X = self.act(X)
             X = self.dropout(X)
 
@@ -418,4 +433,67 @@ class UniGCNII(nn.Module):
         return F.log_softmax(x, dim=1)
 
 
+class batch_norm(torch.nn.Module):
+    def __init__(self, dim_hidden, type_norm, skip_connect=False, num_groups=1,
+                 skip_weight=0.005,sw_learnable=False,multiple=1,mul_learnable=False):
+        super(batch_norm, self).__init__()
+        self.type_norm = type_norm
+        self.skip_connect = skip_connect
+        self.num_groups = num_groups
+        self.skip_weight = skip_weight
+        self.dim_hidden = dim_hidden
+        self.sw_learnable=sw_learnable
+        self.multiple=multiple
+        self.mul_learnable=mul_learnable
+        if self.type_norm == 'batch':
+            self.bn = torch.nn.BatchNorm1d(dim_hidden, momentum=0.3)
+        elif self.type_norm == 'group':
+            self.bn = torch.nn.BatchNorm1d(dim_hidden*self.num_groups, momentum=0.3)
+            self.group_func = torch.nn.Linear(dim_hidden, self.num_groups, bias=True)
+        else:
+            pass
+
+        self.lam=Parameter(torch.FloatTensor(1, 1))
+        self.mul=Parameter(torch.FloatTensor(1, 1))
+        #self.lam =Parameter(torch.FloatTensor(num_groups, 1))
+        self.reset_parameters()
+    def reset_parameters(self):
+        self.lam.data.uniform_(self.skip_weight, self.skip_weight)
+        self.mul.data.uniform_(self.multiple, self.multiple)
+    def forward(self, x):
+        if self.type_norm == 'None':
+            return x
+        elif self.type_norm == 'batch':
+            # print(self.bn.running_mean.size())
+            return self.bn(x)
+        elif self.type_norm == 'pair':
+            col_mean = x.mean(dim=0)
+            x = x - col_mean
+            rownorm_mean = (1e-6 + x.pow(2).sum(dim=1).mean()).sqrt()
+            x = x / rownorm_mean
+            if self.mul_learnable:
+                x=x*self.mul
+            else:
+                x=x*self.multiple
+            return x
+        elif self.type_norm == 'group':
+            if self.num_groups == 1:
+                x_temp = self.bn(x)
+            else:
+                score_cluster = F.softmax(self.group_func(x), dim=1)
+                x_temp = torch.cat([score_cluster[:, group].unsqueeze(dim=1) * x for group in range(self.num_groups)], dim=1)
+                #x_temp = torch.cat([self.lam[group]*score_cluster[:, group].unsqueeze(dim=1) * x for group in range(self.num_groups)],dim=1)
+                x_temp = self.bn(x_temp).view(-1, self.num_groups, self.dim_hidden).sum(dim=1)
+                #x_temp = self.bn(x_temp).view(-1, self.num_groups, self.dim_hidden).self.lam*average(axis=1,weights=torch.ones(num_groups))
+            if self.sw_learnable:
+                x = x + x_temp * self.lam
+            else:
+                x = x + x_temp * self.skip_weight
+            '''
+            for i in range(self.num_groups):
+                x=x+x_temp[:,i,:]*self.lam[i]
+            '''
+            return x
+        else:
+            raise Exception(f'the normalization has not been implemented')
 
