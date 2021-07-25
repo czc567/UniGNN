@@ -19,10 +19,38 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../code/UniGNN" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../AST" />
+    <property name="restartRequiresConfirmation" value="false" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
-  <component name="RunManager">
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\GitHub\UniGNN2" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.train">
+    <configuration name="plotline" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="UniGNN2" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/plotline.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="train" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="UniGNN2" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -36,6 +64,13 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <PathMappingSettings>
+        <option name="pathMappings">
+          <list>
+            <mapping local-root="$PROJECT_DIR$" remote-root="/data/czc/UniGNN2" />
+          </list>
+        </option>
+      </PathMappingSettings>
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/train.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
@@ -48,6 +83,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.train" />
+        <item itemvalue="Python.plotline" />
       </list>
     </recent_temporary>
   </component>
@@ -59,14 +95,33 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1621647754259</updated>
-      <workItem from="1621647756085" duration="2169000" />
+      <workItem from="1621647756085" duration="2220000" />
+      <workItem from="1621658853238" duration="12801000" />
+      <workItem from="1621689930011" duration="15561000" />
+      <workItem from="1621732303640" duration="32063000" />
+      <workItem from="1621815068447" duration="8187000" />
+      <workItem from="1621837843967" duration="29782000" />
+      <workItem from="1621901717675" duration="84549000" />
+      <workItem from="1622072334921" duration="17814000" />
+      <workItem from="1622429184459" duration="117000" />
+      <workItem from="1626509642991" duration="273000" />
+      <workItem from="1627013877927" duration="21652000" />
+      <workItem from="1627219911999" duration="1611000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="XDebuggerManager">
+    <watches-manager>
+      <configuration name="PythonConfigurationType">
+        <watch expression="python train.py --model_name UniGAT --nlayer 2 --nhid 8 --dropout 0.6 --nhead 8 --attn-drop 0.6 --data coauthorship --dataset cora --type_norm group --skip_weight 0.0001 --gpu 0 --skipweight_learnable --lr_sw 1e-6 --wd_sw 1e-5 &amp;&#10;python train.py --model_name UniGAT --nlayer 4 --nhid 8 --dropout 0.6 --nhead 8 --attn-drop 0.6 --data coauthorship --dataset cora --type_norm group --skip_weight 0.02 --gpu 2 --skipweight_learnable --lr_sw 1e-6 --wd_sw 1e-5 &amp;&#10;python train.py --model_name UniGAT --nlayer 8 --nhid 8 --dropout 0.6 --nhead 8 --attn-drop 0.6 --data coauthorship --dataset cora --type_norm group --skip_weight 0.02 --gpu 1 --skipweight_learnable --lr_sw 1e-6 --wd_sw 1e-5 &amp;&#10;python train.py --model_name UniGAT --nlayer 16 --nhid 8 --dropout 0.6 --nhead 8 --attn-drop 0.6 --data coauthorship --dataset cora --type_norm group --skip_weight 0.02 --gpu 0 --skipweight_learnable --lr_sw 1e-6 --wd_sw 1e-5 &amp;&#10;python train.py --model_name UniGAT --nlayer 32 --nhid 8 --dropout 0.6 --nhead 8 --attn-drop 0.6 --data coauthorship --dataset cora --type_norm group --skip_weight 0.02 --gpu 3 --skipweight_learnable --lr_sw 1e-6 --wd_sw 1e-5 &amp;&#10;" />
+      </configuration>
+    </watches-manager>
+  </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/UniGNN2$train.coverage" NAME="train Coverage Results" MODIFIED="1621649909539" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/UniGNN2$plotline.coverage" NAME="plotline Coverage Results" MODIFIED="1622050810459" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/UniGNN2$train.coverage" NAME="train Coverage Results" MODIFIED="1622081018015" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

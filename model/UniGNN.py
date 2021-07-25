@@ -418,13 +418,23 @@ class UniGCNII(nn.Module):
         self.non_reg_params = list(self.convs[0:1].parameters())+list(self.convs[-1:].parameters())
         self.dropout = nn.Dropout(args.dropout)
 
+        self.alpha_learnable=args.alpha_learnable
+        self.learnable_alpha= Parameter(torch.FloatTensor(nlayer, 1))
+        self.reset_parameters()
+    def reset_parameters(self):
+        self.learnable_alpha.data.uniform_(0.1,0.1)
+
     def forward(self, x):
         V, E = self.V, self.E 
-        lamda, alpha = 0.5, 0.1 
+        lamda, alpha = 0.2, 0.1
         x = self.dropout(x)
         x = F.relu(self.convs[0](x))
         x0 = x 
         for i,con in enumerate(self.convs[1:-1]):
+
+            if self.alpha_learnable:
+                alpha= self.learnable_alpha[i]
+
             x = self.dropout(x)
             beta = math.log(lamda/(i+1)+1)
             x = F.relu(con(x, V, E, alpha, beta, x0))

@@ -100,9 +100,15 @@ def initialise(X, Y, G, args, unseen=None):
     # UniGNN and optimiser
     if args.model_name == 'UniGCNII':
         model = UniGCNII(args, nfeat, nhid, nclass, nlayer, nhead, V, E)
+        p1= []  # 用于设置不同的层使用不同的学习率
+        for n, p in model.named_parameters():
+            #print(n, p.shape)
+            if '_alpha' in n:
+                p1.append(p)
         optimiser = torch.optim.Adam([
             dict(params=model.reg_params, weight_decay=0.01),
-            dict(params=model.non_reg_params, weight_decay=5e-4)
+            dict(params=model.non_reg_params, weight_decay=5e-4),
+            dict(params=p1, weight_decay=args.wd_mul,lr=args.lr_mul)
         ], lr=0.01)
     elif args.model_name == 'HyperGCN':
         args.fast = True
@@ -113,7 +119,7 @@ def initialise(X, Y, G, args, unseen=None):
         model = UniGNN(args, nfeat, nhid, nclass, nlayer, nhead, V, E)
         p1, p2, p3, = [], [], []  # 用于设置不同的层使用不同的学习率
         for n, p in model.named_parameters():
-            print(n, p.shape)
+            #print(n, p.shape)
             if '.lam' in n:
                 p2.append(p)
             elif '.mul' in n:

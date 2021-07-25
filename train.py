@@ -11,7 +11,12 @@ import path
 import shutil
 
 import config
+import csv
 
+def data_write_csv(filename, data):
+    with open(filename, "a", encoding="utf-8", newline='') as w:
+        writer = csv.writer(w)
+        writer.writerow(data)
 
 args = config.parse()
 
@@ -127,3 +132,12 @@ for run in range(1, args.n_runs+1):
 
 resultlogger.info(f"Average final test accuracy: {np.mean(test_accs)} ± {np.std(test_accs)}")
 resultlogger.info(f"Average best test accuracy: {np.mean(best_test_accs)} ± {np.std(best_test_accs)}")
+
+data_write_csv(args.save_file,
+               [
+                   f"{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())}, data: {args.data}, dataset: {args.dataset}, model-name:{args.model_name}, "
+                   f"type_norm{args.type_norm}, skip_weight: {args.skip_weight}, skipweight_learnable: {args.skipweight_learnable}, nlayer:{args.nlayer}, "
+                   f"lr_sw:{args.lr_sw}, wd_sw:{args.wd_sw}, nhid: {args.nhid}, dropout: {args.dropout},Average best test accuracy:{np.mean(best_test_accs)} ± {np.std(best_test_accs)}, gpu:{args.gpu}, "
+                   f"multiple: {args.multiple}, mul_learnable: {args.mul_learnable}, lr_mul:{args.lr_mul}, wd_mul:{args.wd_mul},best_test_acc:{best_test_acc}"
+
+               ])
